@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cloudops-copilot"
+version = "0.1.0"
+description = "RAG-based chat assistant for AWS CloudWatch logs"
+authors = [{name = "Developer", email = "dev@example.com"}]
+requires-python = ">=3.12"
+dependencies = [
+    "boto3>=1.28.0",
+    "faiss-cpu>=1.7.4",
+    "fastapi>=0.104.0",
+    "uvicorn>=0.24.0",
+    "streamlit>=1.28.0",
+    "httpx>=0.25.0",
+    "pydantic>=2.5.0",
+    "python-dateutil>=2.8.2",
+    "aws-cdk-lib>=2.100.0",
+    "constructs>=10.3.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "hypothesis>=6.88.0",
+    "moto[s3,cloudwatch,dynamodb,ssm,ec2,ecr,lambda,events,sns,iam]>=4.2.0",
+]
+
+[tool.pytest.ini_options]
+addopts = "--tb=short -v"
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+
+[tool.black]
+line-length = 100
+
+[tool.isort]
+profile = "black"
+line_length = 100

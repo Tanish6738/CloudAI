@@ -1,0 +1,1 @@
+"""Log generator Lambda function."""
