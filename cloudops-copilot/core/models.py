@@ -24,9 +24,20 @@ class LogRecord:
     attributes: dict = field(default_factory=dict)
 
     def __post_init__(self):
-        """Normalize attributes: None → {}."""
+        """Normalize None values to sentinels."""
+        # Normalize None attributes to empty dict
         if self.attributes is None:
             self.attributes = {}
+        
+        # Normalize None string fields to empty strings
+        if self.source is None:
+            self.source = ""
+        if self.service is None:
+            self.service = ""
+        if self.level is None:
+            self.level = ""
+        if self.message is None:
+            self.message = ""
 
 
 @dataclass

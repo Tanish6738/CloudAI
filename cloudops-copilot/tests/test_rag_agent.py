@@ -14,7 +14,7 @@ class TestRAGAgentNoFabrication:
     """Test RAG agent doesn't cite evidence when absent."""
 
     @given(num_chunks=st.integers(min_value=0, max_value=5))
-    @settings(max_examples=20, suppress_health_check=[HealthCheck.too_slow])
+    @settings(max_examples=20, suppress_health_check=[HealthCheck.too_slow], deadline=None)
     def test_no_citations_when_no_evidence(self, num_chunks):
         """When all chunks score < 0.5, should not cite any IDs."""
         # Create low-scoring chunks

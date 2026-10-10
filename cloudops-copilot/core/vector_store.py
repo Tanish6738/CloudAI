@@ -143,24 +143,28 @@ class VectorStore:
             Version path (e.g., "index/v20261009T140000Z")
         """
         import io
+        import tempfile
+        import os
 
         # Create version path
         version_path = f"{prefix}v{datetime.utcnow().isoformat().replace(':', '').replace('-', '')}"
 
         try:
-            # Save FAISS index
-            index_bytes = io.BytesIO()
-            faiss.write_index(self.index, index_bytes.getvalue() if hasattr(index_bytes, 'getvalue') else None)
-            # Use temp file instead
-            import tempfile
-            with tempfile.NamedTemporaryFile(delete=False) as f:
-                faiss.write_index(self.index, f.name)
-                with open(f.name, "rb") as idx_file:
+            # Save FAISS index to temp file
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".index") as f:
+                temp_path = f.name
+            
+            try:
+                faiss.write_index(self.index, temp_path)
+                with open(temp_path, "rb") as idx_file:
                     self.s3_client.put_object(
                         Bucket=bucket,
                         Key=f"{version_path}/faiss.index",
                         Body=idx_file.read(),
                     )
+            finally:
+                if os.path.exists(temp_path):
+                    os.remove(temp_path)
 
             # Save metadata
             metadata_json = json.dumps(self.metadata.to_json())

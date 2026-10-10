@@ -29,6 +29,9 @@ dev = [
     "moto[s3,cloudwatch,dynamodb,ssm,ec2,ecr,lambda,events,sns,iam]>=4.2.0",
 ]
 
+[tool.setuptools]
+packages = ["core", "plugins", "agent", "api", "ui", "lambdas", "eval"]
+
 [tool.pytest.ini_options]
 addopts = "--tb=short -v"
 testpaths = ["tests"]

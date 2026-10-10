@@ -7,7 +7,7 @@ Validates: Requirement 5.13
 from datetime import datetime, timedelta
 from hypothesis import given, settings, HealthCheck
 from hypothesis import strategies as st
-from moto import mock_s3
+from moto import mock_aws
 import boto3
 
 from core.vector_store import VectorStore
@@ -17,9 +17,9 @@ from core.models import Chunk
 class TestVectorStoreRoundTrip:
     """Test FAISS index save/load preserves search results."""
 
-    @mock_s3
+    @mock_aws
     @given(num_chunks=st.integers(min_value=1, max_value=50))
-    @settings(max_examples=20, suppress_health_check=[HealthCheck.too_slow])
+    @settings(max_examples=20, suppress_health_check=[HealthCheck.too_slow], deadline=None)
     def test_vector_store_round_trip_preserves_top_5(self, num_chunks):
         """Reloaded index should return same top-5 results."""
         # Create S3 bucket

@@ -6,7 +6,7 @@ Validates: Requirements 4.4, 4.5
 import json
 import os
 from datetime import datetime
-from moto import mock_logs
+from moto import mock_aws
 
 # Set env var before importing handler
 os.environ["LOG_GROUP_NAME"] = "test-log-group"
@@ -14,7 +14,7 @@ os.environ["LOG_GROUP_NAME"] = "test-log-group"
 from lambdas.log_generator.handler import handler
 
 
-@mock_logs
+@mock_aws
 def test_log_generator_produces_minimum_records():
     """Log generator Lambda should produce at least 10 records per invocation."""
     import boto3
@@ -35,7 +35,7 @@ def test_log_generator_produces_minimum_records():
     assert body["count"] >= 10
 
 
-@mock_logs
+@mock_aws
 def test_log_generator_includes_error_and_info():
     """Log generator should include both ERROR and INFO level logs."""
     import boto3
