@@ -1,1 +1,0 @@
-"""Log ingestion plugin system."""
