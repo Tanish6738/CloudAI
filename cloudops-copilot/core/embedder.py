@@ -54,6 +54,8 @@ class Embedder:
 
     def _call_bedrock_with_retry(self, texts: list[str]) -> list[list[float]]:
         """Call Bedrock with exponential backoff on throttling."""
+        import json
+        
         delays = [1, 2, 4]  # seconds
 
         for attempt in range(self.max_retries + 1):
@@ -67,13 +69,11 @@ class Embedder:
                 # Call Bedrock
                 response = self.client.invoke_model(
                     modelId=self.model_id,
-                    body=str(request_body),
+                    body=json.dumps(request_body),
                     contentType="application/json",
                 )
 
                 # Parse response
-                import json
-
                 response_body = json.loads(response["body"].read())
                 embeddings = response_body.get("embedding", [])
 
